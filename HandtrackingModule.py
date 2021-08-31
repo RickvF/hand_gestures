@@ -5,7 +5,7 @@ from Hand import Hand
 
 
 class handDetector():
-    def __init__(self, mode=False, maxHands=2, detectionCon=0.5, trackingCon=0.5):
+    def __init__(self, videoSource=0, mode=False, maxHands=2, detectionCon=0.7, trackingCon=0.7):
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -17,6 +17,8 @@ class handDetector():
                                         self.detectionCon, 
                                         self.trackingCon)
         self.mpDraw = mp.solutions.drawing_utils
+
+        self.cap = cv2.VideoCapture(videoSource)
     
     
     def findHands(self, img, draw=True):
@@ -56,38 +58,13 @@ class handDetector():
     
 
     # Get all hands and fingers in the captured image. Draw dots and lines too
-    def obtainHands(self, img):
+    def obtainHands(self):
+        success, img = self.cap.read()
+
         img, handsCount = self.findHands(img)
 
         hands = []
         for i in range(0, handsCount):
             hands.append(self.findPosition(img, i))
         
-        return img, hands 
-
-    
-  
-
-def main():
-    cap = cv2.VideoCapture(0)
-    detector = handDetector()
-
-    while True:
-        success, img = cap.read()
-
-        img, hands = detector.obtainHands(img)        
-
-        numberFinger = 0
-
-        for i, hands in enumerate(hands):
-            for j, finger in enumerate(hands.fingers):
-                if(finger.isOpen()):
-                    numberFinger = numberFinger + 1
-
-        print(numberFinger)
-
-        cv2.imshow("Image", img)
-        cv2.waitKey(1)
-
-if __name__ == "__main__":
-    main()
+        return img, hands   

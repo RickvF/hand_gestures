@@ -12,3 +12,7 @@ class Hand():
                     self.fingers.append(Finger(id, self.landmarks, True))      
                 else:
                     self.fingers.append(Finger(id, self.landmarks))   
+    
+
+    def detectGesture():
+        return
