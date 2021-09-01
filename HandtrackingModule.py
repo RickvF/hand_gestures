@@ -2,6 +2,9 @@ import cv2
 import mediapipe as mp
 from mediapipe.python.solutions import hands
 from Hand import Hand
+from FingerGesture import FingerGesture
+from HandGesture import HandGesture
+from Gesture import Gesture
 
 
 class handDetector():
@@ -19,6 +22,8 @@ class handDetector():
         self.mpDraw = mp.solutions.drawing_utils
 
         self.cap = cv2.VideoCapture(videoSource)
+
+        self.gestureList = []
     
     
     def findHands(self, img, draw=True):
@@ -68,3 +73,14 @@ class handDetector():
             hands.append(self.findPosition(img, i))
         
         return img, hands   
+
+    def setupGestures(self, hands):
+        self.gestureList = []
+
+        for i, hands in enumerate(hands):
+            self.gestureList.append(HandGesture(hands.getHandDescription() +  " hand open", True if (hands.fingers[0].isOpen() and hands.fingers[1].isOpen() and hands.fingers[2].isOpen() and hands.fingers[3].isOpen() and hands.fingers[4].isOpen()) else False))
+            for j, finger in enumerate(hands.fingers):
+                # self.gestureList.append(FingerGesture("Finger " + str(j) + " open", True if finger.isOpen() else False))
+                break
+        
+        return self

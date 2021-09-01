@@ -13,6 +13,14 @@ class Hand():
                 else:
                     self.fingers.append(Finger(id, self.landmarks))   
     
+    def getHandDescription(self):
+        if(self.isLeftHand):
+            return "Left"
+        else:
+            return "Right"
 
     def detectGesture():
+        return
+
+    def setupGesture():
         return
