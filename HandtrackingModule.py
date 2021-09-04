@@ -2,10 +2,6 @@ import cv2
 import mediapipe as mp
 from mediapipe.python.solutions import hands
 from Hand import Hand
-from FingerGesture import FingerGesture
-from HandGesture import HandGesture
-from Gesture import Gesture
-
 
 class handDetector():
     def __init__(self, videoSource=0, mode=False, maxHands=2, detectionCon=0.7, trackingCon=0.7):
@@ -23,9 +19,10 @@ class handDetector():
 
         self.cap = cv2.VideoCapture(videoSource)
 
-        self.gestureList = []
-    
-    
+        #List of all Hand objects
+        self.handsInformation = []
+
+    #Find the amount of hands in the view
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
@@ -63,24 +60,19 @@ class handDetector():
     
 
     # Get all hands and fingers in the captured image. Draw dots and lines too
-    def obtainHands(self):
+    def obtainHands(self, draw=True):
         success, img = self.cap.read()
 
-        img, handsCount = self.findHands(img)
+        img, handsCount = self.findHands(img, draw)
 
-        hands = []
+        self.handsInformation = []
         for i in range(0, handsCount):
-            hands.append(self.findPosition(img, i))
+            self.handsInformation.append(self.findPosition(img, i, draw))
         
-        return img, hands   
-
-    def setupGestures(self, hands):
-        self.gestureList = []
-
-        for i, hands in enumerate(hands):
-            self.gestureList.append(HandGesture(hands.getHandDescription() +  " hand open", True if (hands.fingers[0].isOpen() and hands.fingers[1].isOpen() and hands.fingers[2].isOpen() and hands.fingers[3].isOpen() and hands.fingers[4].isOpen()) else False))
-            for j, finger in enumerate(hands.fingers):
-                # self.gestureList.append(FingerGesture("Finger " + str(j) + " open", True if finger.isOpen() else False))
-                break
-        
-        return self
+        return img, self.handsInformation   
+    
+    
+    #detect which gesture is active per hand
+    def obtainGesture(self):
+        for j, hand in enumerate(self.handsInformation):
+            hand.detectGesture()

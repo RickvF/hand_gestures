@@ -6,29 +6,14 @@ def main():
     detector = handDetector()
 
     while True:
-        gestureList = []
 
         #Obtain all hand and finger information. Obtain all positions and draw points and line on the image
-        img, hands = detector.obtainHands()   
+        img, hands = detector.obtainHands(draw=False)   
 
-        #Register all gestures to listen too
-        detector = detector.setupGestures(hands)   
+        #Check which gestures are active per hand
+        detector.obtainGesture()
 
-        
-        for i, gesture in enumerate(detector.gestureList):
-            if(gesture.isActive()):
-                print(gesture.getDescription())
-                break
-
-        # numberFinger = 0
-
-        # for i, hands in enumerate(hands):
-        #     for j, finger in enumerate(hands.fingers):
-        #         if(finger.isOpen()):
-        #             numberFinger = numberFinger + 1
-
-        # print(numberFinger)
-
+        #Show all data on the image
         cv2.imshow("Image", img)
         cv2.waitKey(1)
 

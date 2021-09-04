@@ -1,5 +1,3 @@
-
-
 from Gesture import Gesture
 
 
