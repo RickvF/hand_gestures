@@ -8,10 +8,10 @@ def main():
     while True:
 
         #Obtain all hand and finger information. Obtain all positions and draw points and line on the image
-        img, hands = detector.obtainHands(draw=False)   
+        img, hands = detector.obtainHands(draw=True)   
 
         #Check which gestures are active per hand
-        detector.obtainGesture()
+        currentGestures = detector.obtainGesture()
 
         #Show all data on the image
         cv2.imshow("Image", img)

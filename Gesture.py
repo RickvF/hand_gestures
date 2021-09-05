@@ -1,7 +1,9 @@
 
 
 class Gesture():
-    def __init__(self, description, condition):
+    def __init__(self, hand, description, condition):
+        #Indentification of hand
+        self.hand = hand
         #Identification of the gesture
         self.description = description
         #Condition what finger positions need to be to trigger the gesture
